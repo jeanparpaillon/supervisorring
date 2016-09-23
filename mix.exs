@@ -4,10 +4,10 @@ defmodule Supervisorring.Mixfile do
   def project do
     [ app: :supervisorring,
       version: "0.1.0",
-      elixir: "~> 1.2",
+      elixir: "~> 1.3",
       deps: [
-        {:gen_serverring, "~> 0.0.3",
-          git: "https://github.com/shopping-adventure/gen_serverring.git"}]]
+        {:gen_serverring,
+         git: "https://github.com/shopping-adventure/gen_serverring.git"}]]
   end
 
   def application do
