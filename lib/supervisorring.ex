@@ -71,10 +71,13 @@ defmodule Supervisorring do
         cur_children |> filter(fn {id,_}->not Dict.has_key?(wanted_children,id) end) |> each(fn {id,{id,child,type,modules}}->
           new_node = ConsistentHash.node_for_key(ring,{sup_ref,id})
           if is_pid(child) do
-            case :rpc.call(new_node,Supervisor,:start_child,[Supervisorring.local_sup_ref(sup_ref),all_children|>Dict.get(id)]) do
-              {:error,{:already_started,existingpid}}->callback.migrate({id,type,modules},child,existingpid)
-              {:ok,newpid}->callback.migrate({id,type,modules},child,newpid)
-              _ -> :nothingtodo
+            case :rpc.call(new_node,Supervisor,:start_child,[Supervisorring.local_sup_ref(sup_ref),all_children |> Dict.get(id)]) do
+              {:error,{:already_started,existingpid}} ->
+		callback.migrate({id,type,modules},child,existingpid)
+              {:ok,newpid} ->
+		callback.migrate({id,type,modules},child,newpid)
+              _ ->
+		:nothingtodo
             end
             sup_ref |> Supervisorring.local_sup_ref |> Supervisor.terminate_child(id)
           end
